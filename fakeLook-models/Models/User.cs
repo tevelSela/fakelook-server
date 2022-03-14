@@ -8,11 +8,11 @@ namespace fakeLook_models.Models
 {
     public class User
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Password { get; set; }
         public string Address { get; set; }
-
+        
         /* EF Relations */
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Post> Posts { get; set; }
