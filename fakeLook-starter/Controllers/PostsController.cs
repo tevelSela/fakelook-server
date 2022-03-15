@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+using fakeLook_starter.Repositories;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using fakeLook_starter.Interfaces;
 using System.Threading.Tasks;
@@ -11,23 +12,21 @@ namespace fakeLook_starter.Controllers
     [ApiController]
     public class PostsController : ControllerBase
     {
-        private readonly IPostRepository _Postrepository;
+        private readonly IPostRepository _postRepository;
 
-        public PostsController(IPostRepository Postrepository)
+        public PostsController(IPostRepository postRepository)
         {
-            _Postrepository = Postrepository;
+            _postRepository = postRepository;
         }
-
         [HttpGet]
         public async Task<IEnumerable<Post>> GetPosts()
         {
-            return _Postrepository.GetAll();
+            return _postRepository.GetAll();
         }
-
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<Post>> GetPost(int id)
-        //{
-        //    return _Postrepository.GetById(id);
-        //}
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Post>> GetPost(int id)
+        {
+            return _postRepository.GetById(id.ToString());
+        }
     }
 }

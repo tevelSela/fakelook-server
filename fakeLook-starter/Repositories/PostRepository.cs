@@ -35,14 +35,24 @@ namespace fakeLook_starter.Repositories
             return _context.Posts.ToList();
         }
 
+        public Post GetById(string id)
+        {
+            return _context.Posts.SingleOrDefault(p => p.Id.ToString().Equals(id.ToString()));
+        }
+
         public Post GetById(int id)
         {
-            return _context.Posts.SingleOrDefault(p => p.Id == id);
+            throw new NotImplementedException();
         }
 
         public ICollection<Post> GetByPredicate(Func<Post,bool> predicate)
         {
             return _context.Posts.Where(predicate).ToList();
+        }
+
+        public Post Post(Post item)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -14,6 +14,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using fakeLook_starter.Interfaces;
 using fakeLook_starter.Repositories;
+using fakeLook_starter.Services;
+using fakeLook_models.Models;
 
 namespace fakeLook_starter
 {
@@ -34,7 +36,11 @@ namespace fakeLook_starter
             services.AddControllers();
             #region Setting repository and services interfaces
             services.AddTransient<IPostRepository, PostRepository>();
+            services.AddScoped<IPostRepository, PostRepository>();
+            services.AddTransient<IUserRepository, UsersRepository>();
+            services.AddScoped<IUserRepository, UsersRepository>();
             services.AddTransient<ITokenService, TokenService>();
+            //services.AddSingleton<IUserRepository, UsersRepository>();
             #endregion
             #region Setting DB configuration
             string connectionString = Configuration.GetConnectionString("DefaultConnection");

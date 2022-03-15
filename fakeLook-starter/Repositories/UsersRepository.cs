@@ -1,44 +1,36 @@
-﻿using fakeLook_starter.Interfaces;
+using fakeLook_starter.Interfaces;
 using fakeLook_models.Models;
+using fakeLook_dal.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace auth_example.Repositories
+namespace fakeLook_starter.Repositories
 {
-    public class UsersRepository : IRepository<User>
+    public class UsersRepository : IUserRepository
     {
-        private List<User> _db;
-        public UsersRepository()
+        readonly private DataContext _db;
+        public UsersRepository(DataContext context)
         {
-            _db = new List<User>() {
-                new User() {
-                    Name = "UserOne",
-                    Id = Guid.NewGuid().ToString()
-                    ,Password = "12345".GetHashCode().ToString() },
-                new User() {
-                    Name = "UserTwo",
-                    Id = Guid.NewGuid().ToString()
-                    ,Password = "12345".GetHashCode().ToString(),
-                     }};
+            _db = context;
         }
         public User GetById(string id)
         {
-            return _db.Where(user => user.Id == id).Single();
+            return _db.Users.SingleOrDefault(p => p.Id.ToString().Equals(id));
         }
 
         public User FindItem(User item)
         {
             item.Password = item.Password.GetHashCode().ToString();
-            return _db.Where(user => user.Name == item.Name &&  user.Password == item.Password).SingleOrDefault();
+            return _db.Users.Where(user =>  user.Name == item.Name && user.Password == item.Password).SingleOrDefault();
         }
 
         public User Post(User item)
         {
-            item.Id = Guid.NewGuid().ToString();
             item.Password = item.Password.GetHashCode().ToString();
             _db.Add(item);
+            _db.SaveChanges();
             return item;
         }
 
@@ -57,14 +49,19 @@ namespace auth_example.Repositories
             throw new NotImplementedException();
         }
 
+        public ICollection<User> GetByPredicate(Func<User, bool> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
         public User GetById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public ICollection<User> GetByPredicate(Func<User, bool> predicate)
+        public User GetByUsernameAndPassword(string username, string password)
         {
-            throw new NotImplementedException();
+            return _db.Users.SingleOrDefault(u=>u.Name == username && u.Password == password);
         }
     }
 }

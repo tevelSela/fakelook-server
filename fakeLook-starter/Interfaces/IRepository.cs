@@ -1,4 +1,4 @@
-﻿using fakeLook_models.Models;
+using fakeLook_models.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,15 +13,8 @@ namespace fakeLook_starter.Interfaces
         public Task<T> Edit(T item);
         public T GetById(int id);
         public ICollection<T> GetByPredicate(Func<T, bool> predicate);
-        
+        public T Post(T item);
+        public T GetById(string id);
     }
-    public interface IUserRepository : IRepository<User>
-    {
-        public User FindItem(User item);
-        public User Post(User item);
-    }
-    public interface IPostRepository : IRepository<Post>
-    {
-
-    }
+ 
 }

@@ -10,7 +10,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace fakelook_starter.Services
+namespace fakeLook_starter.Services
 {
     public class TokenService : ITokenService
     {
@@ -26,7 +26,8 @@ namespace fakelook_starter.Services
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new[] {
-            new Claim(ClaimTypes.Name, user.Id),
+            new Claim(ClaimTypes.Name, user.Id.ToString()),
+            //new Claim(ClaimTypes.Role, user.Role),
         };
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
               _config["Jwt:Issuer"],
