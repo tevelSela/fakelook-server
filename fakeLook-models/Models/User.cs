@@ -6,7 +6,15 @@ using System.Threading.Tasks;
 
 namespace fakeLook_models.Models
 {
-    public class User
+    public interface IUser {
+        public string Mail { get; set;}
+        public string Password { get; set; }
+        public string Name { get; set; }
+        public string Address { get; set; }
+        public string CompanyName { get; set; }
+        public DateTime? BirthDate { get; set; }
+    }
+    public class User:IUser
     {
         public int Id { get; set; }
         public string Mail { get; set; }
@@ -23,5 +31,15 @@ namespace fakeLook_models.Models
         public virtual ICollection<Like> Likes { get; set; }
         public virtual ICollection<UserTaggedPost> UserTaggedPost { get; set; }
         public virtual ICollection<UserTaggedComment> UserTaggedComment { get; set; }
+    }
+
+    public class UserLite: IUser
+    {
+        public string Mail { get; set; }
+        public string Password { get; set; }
+        public string Name { get; set; }
+        public string Address { get; set; }
+        public string CompanyName { get; set; }
+        public DateTime? BirthDate { get; set; }
     }
 }

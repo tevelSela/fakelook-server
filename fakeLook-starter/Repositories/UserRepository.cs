@@ -26,7 +26,7 @@ namespace fakeLook_starter.Repositories
         {
             var res = _context.Users.Update(item);
             await _context.SaveChangesAsync();
-            return res.Entity;
+                return res.Entity;
         }
 
         public ICollection<User> GetAll()

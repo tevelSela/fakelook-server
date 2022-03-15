@@ -2,8 +2,10 @@
 using fakeLook_starter.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -21,9 +23,10 @@ namespace fakeLook_starter.Controllers
             _repo = repo;
             _tokenService = tokenService;
         }
+
         [HttpPost]
         [Route("Login")]
-        public IActionResult Login([FromBody] User user)
+        public IActionResult Login([FromBody] UserLite user)
         {
             var dbUser = _repo.GetByPredicate(p => p.Mail == user.Mail && p.Password == user.Password)?.FirstOrDefault();
             if (dbUser == null) return Problem("user not in system");
@@ -33,11 +36,31 @@ namespace fakeLook_starter.Controllers
 
         [HttpPost]
         [Route("SignUp")]
-        public IActionResult SignUp([FromBody] User user)
+        public IActionResult SignUp([FromBody] UserLite user)
         {
-            var dbUser = _repo.Post(user);
-            var token = _tokenService.CreateToken(user);
+            var ExistingUser = _repo.GetByPredicate(f => f.Mail == user.Mail)?.ToList();
+            if (ExistingUser != null) return Problem("Mail already exists");
+            var dbUser = _repo.Post(ExistingUser.FirstOrDefault());
+            var token = _tokenService.CreateToken(ExistingUser.FirstOrDefault());
             return Ok(new { token });
+        }
+
+        [HttpPost]
+        [Route("ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword(UserLite user)
+        {
+            var dbUser = _repo.GetByPredicate(f => f.Mail == user.Mail)?.ToList();
+            dbUser.FirstOrDefault().Password = user.Password;
+            if (dbUser == null) return Problem("Non existing mail adress");
+            try
+            {
+                await _repo.Edit(dbUser.FirstOrDefault());
+            }
+            catch(Exception e)
+            {
+                return Problem(e.Message);
+            }
+            return Ok(new { dbUser[0].Password});  
         }
 
         [Authorize]
