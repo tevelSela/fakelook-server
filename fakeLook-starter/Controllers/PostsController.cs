@@ -26,7 +26,7 @@ namespace fakeLook_starter.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Post>> GetPost(int id)
         {
-            return _postRepository.GetById(id);
+            return _postRepository.GetById(id.ToString());
         }
     }
 }
