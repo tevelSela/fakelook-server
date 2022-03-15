@@ -44,5 +44,13 @@ namespace fakeLook_starter.Repositories
         {
             return _context.Users.Where(predicate).ToList();
         }
+
+        public User Post(User item)
+        {
+            item.Password = item.Password.GetHashCode().ToString();
+            _context.Add(item);
+            _context.SaveChanges();
+            return item;
+        }
     }
 }

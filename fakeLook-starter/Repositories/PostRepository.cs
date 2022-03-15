@@ -22,6 +22,14 @@ namespace fakeLook_starter.Repositories
             await _context.SaveChangesAsync();
             return res.Entity;
         }
+        public User Post(User item)
+        {
+            item.Password = item.Password.GetHashCode().ToString();
+            _context.Add(item);
+            _context.SaveChanges();
+            return item;
+        }
+
 
         public async Task<Post> Edit(Post item)
         {
@@ -43,6 +51,11 @@ namespace fakeLook_starter.Repositories
         public ICollection<Post> GetByPredicate(Func<Post,bool> predicate)
         {
             return _context.Posts.Where(predicate).ToList();
+        }
+
+        public Post Post(Post item)
+        {
+            throw new NotImplementedException();
         }
     }
 }

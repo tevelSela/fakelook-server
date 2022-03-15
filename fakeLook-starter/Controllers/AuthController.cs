@@ -1,5 +1,6 @@
 ﻿using fakeLook_models.Models;
 using fakeLook_starter.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,21 @@ namespace fakeLook_starter.Controllers
             return Ok(new { token });
         }
 
+        [HttpPost]
+        [Route("SignUp")]
+        public IActionResult SignUp([FromBody] User user)
+        {
+            var dbUser = _repo.Post(user);
+            var token = _tokenService.CreateToken(user);
+            return Ok(new { token });
+        }
 
+        [Authorize]
+        [HttpGet]
+        [Route("Micha")]
+        public IActionResult okM(int liron)
+        {
+            return Ok();
+        }
     }
 }
