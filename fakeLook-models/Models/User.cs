@@ -16,6 +16,7 @@ namespace fakeLook_models.Models
         public string CompanyName { get; set; }
 
         public DateTime? BirthDate { get; set; }
+        
 
         /* EF Relations */
         public virtual ICollection<Comment> Comments { get; set; }

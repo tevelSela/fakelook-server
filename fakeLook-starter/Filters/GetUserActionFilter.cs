@@ -1,5 +1,6 @@
-﻿using fakeLook_starter.Interfaces;
+using fakeLook_starter.Interfaces;
 using fakeLook_models.Models;
+using fakelook_starter.Services;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,6 @@ namespace fakeLook_starter.Filters
             _tokenService = tokenService;
             _userRepository = userRepository;
         }
-
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {

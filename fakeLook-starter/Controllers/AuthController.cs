@@ -1,4 +1,4 @@
-﻿using fakeLook_starter.Filters;
+using fakeLook_starter.Filters;
 using fakeLook_starter.Interfaces;
 using fakeLook_models.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -12,6 +12,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace fakeLook_starter.Controllers
 {
@@ -62,5 +63,6 @@ namespace fakeLook_starter.Controllers
         {
             return Ok();
         }
+
     }
 }
