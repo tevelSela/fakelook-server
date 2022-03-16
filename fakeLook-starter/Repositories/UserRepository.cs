@@ -22,6 +22,11 @@ namespace fakeLook_starter.Repositories
             return res.Entity;
         }
 
+        public Task<User> Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<User> Edit(User item)
         {
             var res = _context.Users.Update(item);
@@ -45,9 +50,10 @@ namespace fakeLook_starter.Repositories
             return _context.Users.Where(predicate).ToList();
         }
 
+
         public User Post(User item)
         {
-            item.Password = item.Password.GetHashCode().ToString();
+            item.Password = item.Password.ToString();
             _context.Add(item);
             _context.SaveChanges();
             return item;

@@ -31,27 +31,28 @@ namespace fakeLook_starter.Controllers
             var dbUser = _repo.GetByPredicate(p => p.Mail == user.Mail && p.Password == user.Password)?.FirstOrDefault();
             if (dbUser == null) return Problem("user not in system");
             var token = _tokenService.CreateToken(dbUser);
-            return Ok(new { token });
+            return Ok(new { token, dbUser });
         }
 
         [HttpPost]
         [Route("SignUp")]
-        public IActionResult SignUp([FromBody] UserLite user)
+        public IActionResult SignUp([FromBody] User user)
         {
             var ExistingUser = _repo.GetByPredicate(f => f.Mail == user.Mail)?.ToList();
-            if (ExistingUser != null) return Problem("Mail already exists");
-            var dbUser = _repo.Post(ExistingUser.FirstOrDefault());
-            var token = _tokenService.CreateToken(ExistingUser.FirstOrDefault());
-            return Ok(new { token });
+            if (ExistingUser.Count()!=0) return Problem("Mail already exists");
+            var dbUser = _repo.Post(user);
+            var token = _tokenService.CreateToken(user);
+            return Ok(new { token, dbUser });
         }
-
+        //request.routhvalue.user
+        //[TypeFilter(typeof(theFilter))]
         [HttpPost]
         [Route("ForgotPassword")]
         public async Task<IActionResult> ForgotPassword(UserLite user)
         {
             var dbUser = _repo.GetByPredicate(f => f.Mail == user.Mail)?.ToList();
-            dbUser.FirstOrDefault().Password = user.Password;
-            if (dbUser == null) return Problem("Non existing mail adress");
+            if(dbUser.Count != 0)dbUser.FirstOrDefault().Password = user.Password;
+            else return Problem("Non existing mail adress");
             try
             {
                 await _repo.Edit(dbUser.FirstOrDefault());
@@ -60,7 +61,7 @@ namespace fakeLook_starter.Controllers
             {
                 return Problem(e.Message);
             }
-            return Ok(new { dbUser[0].Password});  
+            return Ok();  
         }
 
         [Authorize]

@@ -19,6 +19,7 @@ using fakeLook_starter.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace fakeLook_starter
 {
@@ -51,7 +52,11 @@ namespace fakeLook_starter
                   };
               });
             #endregion
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                });
             #region Setting repository and services interfaces
            // services.AddTransient<IPostRepository, PostRepository>();
             services.AddScoped<IPostRepository, PostRepository>();
@@ -80,7 +85,8 @@ namespace fakeLook_starter
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DataContext data)
         {
-            data.Database.EnsureCreated();
+            //data.Database.EnsureDeleted();
+            //data.Database.EnsureCreated();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

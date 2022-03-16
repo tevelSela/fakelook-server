@@ -40,7 +40,7 @@ namespace fakeLook_starter.Repositories
 
         public ICollection<Post> GetAll()
         {
-            return _context.Posts.ToList();
+            return _context.Posts.OrderByDescending(result=>result.Date).ToList();
         }
 
         public Post GetById(int id)
@@ -56,6 +56,14 @@ namespace fakeLook_starter.Repositories
         public Post Post(Post item)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<Post> Delete(int id)
+        {
+            var post=GetById(id);
+            _context.Posts.Remove(post);
+            _context.SaveChangesAsync();
+            return post;
         }
     }
 }
