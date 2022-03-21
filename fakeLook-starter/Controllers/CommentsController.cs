@@ -40,7 +40,7 @@ namespace fakeLook_starter.Controllers
         }
 
         [Authorize]
-        [Route("add")]
+        [Route("addTags")]
         [HttpPost]
         [TypeFilter(typeof(GetUserActionFilter))]
         public IActionResult addCTags(params UserTaggedComment[]? tags)
@@ -71,7 +71,7 @@ namespace fakeLook_starter.Controllers
         {
             var currPost = _commentRepository.GetById(comment.Id);
             if (currPost == null) return Problem("Comment Dosen't exist");
-            if (ta)
+           // if (ta)
             _commentRepository.Edit(currPost);
             return Ok();
         }
