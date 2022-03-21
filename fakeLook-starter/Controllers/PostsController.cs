@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using fakeLook_models.Models;
 using auth_example.Filters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace fakeLook_starter.Controllers
 {
@@ -20,6 +21,7 @@ namespace fakeLook_starter.Controllers
             _postRepository = postRepository;
         }
 
+        [Authorize]
         [HttpGet]
         [TypeFilter(typeof(GetUserActionFilter))]
         public async Task<IEnumerable<Post>> GetPosts()
@@ -34,34 +36,43 @@ namespace fakeLook_starter.Controllers
             return _postRepository.GetById(id);
         }
 
+        [Authorize]
         [Route("publish")]
         [HttpPost]
         [TypeFilter(typeof(GetUserActionFilter))]
-        public IActionResult PublishPost([FromBody]Post post)
+        public IActionResult PublishPost([FromBody] Post post)
         {
             var user = (User)Request.RouteValues["user"];
             post.UserId = user.Id;
             _postRepository.Add(post);
-            return Ok(new {post});
+            return Ok(new { post });
         }
 
+        [Authorize]
         [HttpDelete]
+        [TypeFilter(typeof(GetUserActionFilter))]
         public async Task<ActionResult> DeletePost(int id)
         {
-            var post=_postRepository.GetById(id);
+            var post = _postRepository.GetById(id);
             if (post != null)
             {
-               await _postRepository.Delete(id);
+                await _postRepository.Delete(id);
             }
             return Ok();
         }
-        /*
 
-        public IActionResult EditPost([FromBody]Post post)
+        [Authorize]
+        [Route("Edit")]
+        [HttpGet]
+        [TypeFilter(typeof(GetUserActionFilter))]
+        public IActionResult EditPost([FromBody] Post post)
         {
-            if(post.Id)
+            var currPost = _postRepository.GetById(post.Id);
+            if (currPost == null) return Problem("Post Dosen't exist");
+            _postRepository.Edit(currPost);
+            return Ok();
         }
-        */
+
 
     }
 }

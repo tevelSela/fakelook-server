@@ -22,9 +22,17 @@ namespace auth_example.Filters
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            var token = context.HttpContext.Request.Headers.Where(header => header.Key == "Authorization").SingleOrDefault().Value.ToString().Split(" ")[1];
-            var user = _userRepository.GetById(int.Parse(_tokenService.GetPayload(token)));
-            context.HttpContext.Request.RouteValues.Add("user", user);
+            try
+            {
+                var token = context.HttpContext.Request.Headers.Where(header => header.Key == "Authorization").SingleOrDefault().Value.ToString().Split(" ")[1];
+                var user = _userRepository.GetById(int.Parse(_tokenService.GetPayload(token)));
+                context.HttpContext.Request.RouteValues.Add("user", user);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Token Expaired");
+            }
+            
         }
     }
 }

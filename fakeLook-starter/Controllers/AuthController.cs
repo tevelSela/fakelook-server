@@ -39,7 +39,7 @@ namespace fakeLook_starter.Controllers
         public IActionResult SignUp([FromBody] User user)
         {
             var ExistingUser = _repo.GetByPredicate(f => f.Mail == user.Mail)?.ToList();
-            if (ExistingUser.Count()!=0) return Problem("Mail already exists");
+            if (ExistingUser.Count() != 0) return Problem("Mail already exists");
             var dbUser = _repo.Post(user);
             var token = _tokenService.CreateToken(user);
             return Ok(new { token, dbUser });
@@ -51,17 +51,17 @@ namespace fakeLook_starter.Controllers
         public async Task<IActionResult> ForgotPassword(UserLite user)
         {
             var dbUser = _repo.GetByPredicate(f => f.Mail == user.Mail)?.ToList();
-            if(dbUser.Count != 0)dbUser.FirstOrDefault().Password = user.Password;
+            if (dbUser.Count != 0) dbUser.FirstOrDefault().Password = user.Password;
             else return Problem("Non existing mail adress");
             try
             {
                 await _repo.Edit(dbUser.FirstOrDefault());
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return Problem(e.Message);
             }
-            return Ok();  
+            return Ok();
         }
 
         [Authorize]

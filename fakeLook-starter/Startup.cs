@@ -61,7 +61,11 @@ namespace fakeLook_starter
            // services.AddTransient<IPostRepository, PostRepository>();
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<IRepository<User>, UserRepository>();
+            services.AddScoped<ILikeRepository, LikeRepository>();
+            services.AddScoped<ICommentRepository, CommentRepository>();
+            services.AddScoped<ITagRepository, TagRepository>();
             services.AddTransient<ITokenService, TokenService>();
+            
             #endregion
             #region Setting DB configuration
             string connectionString = Configuration.GetConnectionString("DefaultConnection");
