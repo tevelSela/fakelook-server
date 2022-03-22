@@ -31,9 +31,12 @@ namespace fakeLook_starter.Repositories
             return res.Entity;
         }
 
-        public Task<Comment> Delete(int id)
+        public async Task<Comment> Delete(int id)
         {
-            throw new NotImplementedException();
+            var comment = GetById(id);
+            _context.Comments.Remove(comment);
+            _context.SaveChangesAsync();
+            return comment;
         }
 
         public Task<Comment> Edit(Comment item)
@@ -45,10 +48,13 @@ namespace fakeLook_starter.Repositories
         {
             throw new NotImplementedException();
         }
-
+        public ICollection<Comment> GetAll(int postId)
+        {
+            return _context.Comments.Where(c => c.PostId == postId).ToList();
+        }
         public Comment GetById(int id)
         {
-            throw new NotImplementedException();
+            return _context.Comments.SingleOrDefault(p => p.Id == id);
         }
 
         public ICollection<Comment> GetByPredicate(Func<Comment, bool> predicate)

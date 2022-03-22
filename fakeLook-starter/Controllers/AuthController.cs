@@ -1,4 +1,5 @@
-﻿using fakeLook_models.Models;
+﻿using auth_example.Filters;
+using fakeLook_models.Models;
 using fakeLook_starter.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -66,10 +67,11 @@ namespace fakeLook_starter.Controllers
 
         [Authorize]
         [HttpGet]
-        [Route("Micha")]
-        public IActionResult okM(int liron)
+        [Route("GetAllUsers")]
+        [TypeFilter(typeof(GetUserActionFilter))]
+        public async Task<IEnumerable<User>> GetAllUsers()
         {
-            return Ok();
+            return _repo.GetAll().ToList();
         }
     }
 }

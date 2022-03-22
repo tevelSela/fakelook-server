@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using fakeLook_models.Models;
 using auth_example.Filters;
 using Microsoft.AspNetCore.Authorization;
+using System.Linq;
 
 namespace fakeLook_starter.Controllers
 {
@@ -40,10 +41,14 @@ namespace fakeLook_starter.Controllers
         [Route("publish")]
         [HttpPost]
         [TypeFilter(typeof(GetUserActionFilter))]
-        public IActionResult PublishPost([FromBody] Post post)
+        public IActionResult PublishPost([FromBody] Post post,UserTaggedPost? [] userTags ,Tag[]? tags)
         {
             var user = (User)Request.RouteValues["user"];
             post.UserId = user.Id;
+            if (userTags != null)
+                userTags.ToList().ForEach(t => _postRepository.AddPostUserTag(t));
+            if(tags != null)
+                tags.ToList().ForEach(t => _postRepository.AddpostTag(t))
             _postRepository.Add(post);
             return Ok(new { post });
         }

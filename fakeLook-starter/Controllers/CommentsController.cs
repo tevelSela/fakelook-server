@@ -17,12 +17,13 @@ namespace fakeLook_starter.Controllers
            _commentRepository = CommentRepository;
         }
 
+        [Route("GetComment")]
         [Authorize]
         [HttpGet]
         [TypeFilter(typeof(GetUserActionFilter))]
-        public async Task<IEnumerable<Comment>> GetComents()
+        public async Task<IEnumerable<Comment>> GetComments(int id)
         {
-            return _commentRepository.GetAll();
+            return _commentRepository.GetAll(id);
         }
 
         [Authorize]
@@ -40,7 +41,7 @@ namespace fakeLook_starter.Controllers
         }
 
         [Authorize]
-        [Route("add")]
+        [Route("addTags")]
         [HttpPost]
         [TypeFilter(typeof(GetUserActionFilter))]
         public IActionResult addCTags(params UserTaggedComment[]? tags)
@@ -71,7 +72,7 @@ namespace fakeLook_starter.Controllers
         {
             var currPost = _commentRepository.GetById(comment.Id);
             if (currPost == null) return Problem("Comment Dosen't exist");
-            if (ta)
+            //if (ta)
             _commentRepository.Edit(currPost);
             return Ok();
         }

@@ -65,5 +65,18 @@ namespace fakeLook_starter.Repositories
             _context.SaveChangesAsync();
             return post;
         }
+        public async Task<UserTaggedPost> AddPostUserTag(UserTaggedPost tag)
+        {
+            var res = _context.UserTaggedPosts.Add(tag);
+            await _context.SaveChangesAsync();
+            return res.Entity;
+        }
+        
+        public async Task<Tag> AddpostTag(Tag tag)
+        {
+            var res = _context.Tags.Add(tag);
+            await _context.SaveChangesAsync();
+            return res.Entity;
+        }
     }
 }
