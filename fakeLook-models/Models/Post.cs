@@ -6,6 +6,15 @@ using System.Threading.Tasks;
 
 namespace fakeLook_models.Models
 {
+    public interface IPost
+    {
+        public double X_Position { get; set; }
+        public double Y_Position { get; set; }
+        public double Z_Position { get; set; }
+        public DateTime toDate { get; set; }
+        public DateTime fromDate { get; set; }
+        public int[] UserIds { get; set; }
+    }
     public class Post
     {
 
@@ -24,5 +33,16 @@ namespace fakeLook_models.Models
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Tag> Tags { get; set; }
         public virtual ICollection<UserTaggedPost> UserTaggedPost { get; set; }
+    }
+
+    public class QueryRequest: IPost
+    {
+        public double X_Position { get; set; }
+        public double Y_Position { get; set; }
+        public double Z_Position { get; set; }
+        public DateTime toDate { get; set; }
+        public DateTime fromDate { get; set; }
+        public int[] UserIds { get; set; }
+        public string[] tags { get; set; }
     }
 }

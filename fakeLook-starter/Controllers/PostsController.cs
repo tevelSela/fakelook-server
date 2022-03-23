@@ -30,6 +30,20 @@ namespace fakeLook_starter.Controllers
             return _postRepository.GetAll();
         }
 
+        [Route("getByFilter")]
+        [Authorize]
+        [HttpPost]
+        [TypeFilter(typeof(GetUserActionFilter))]
+        public async Task<IEnumerable<Post>> GetPostsByFilter(QueryRequest filter)
+        {
+            var Listtags = filter.tags.ToList();
+            var entities = _postRepository.GetAll()
+                .Where(p => (p.Date >= filter.fromDate && p.Date <= filter.toDate));
+                if(Listtags.Count()>0)
+                entities =  entities.Where(p => p.Tags.Where(t=>Listtags.Any(ot=>ot.Equals(t.Content))).Count()!=0);
+            return entities;
+        }
+        // var entities= _postRepository.GetByPredicate(p => p.Date >= filter.fromDate && p.Date <= filter.toDate);
         [HttpGet("{id}")]
         [TypeFilter(typeof(GetUserActionFilter))]
         public async Task<ActionResult<Post>> GetPost(int id)
@@ -41,14 +55,26 @@ namespace fakeLook_starter.Controllers
         [Route("publish")]
         [HttpPost]
         [TypeFilter(typeof(GetUserActionFilter))]
-        public IActionResult PublishPost([FromBody] Post post,UserTaggedPost? [] userTags ,Tag[]? tags)
+        public IActionResult PublishPost([FromBody] Post post)
         {
             var user = (User)Request.RouteValues["user"];
             post.UserId = user.Id;
-            if (userTags != null)
-                userTags.ToList().ForEach(t => _postRepository.AddPostUserTag(t));
-            if(tags != null)
-                tags.ToList().ForEach(t => _postRepository.AddpostTag(t))
+
+            //Tag [] tags = new Tag[post.Tags.Count()];
+            //int index = 0;
+            //foreach (Tag tag in post.Tags)
+            //{
+            //    var currTag=_tagRepository.GetByPredicate(t=>t.Content.Equals(tag.Content))?.FirstOrDefault();
+            //    if(currTag != null)
+            //    {
+            //        tags[index++]=currTag;
+            //    }
+            //}
+            //foreach(Tag tag in tags)
+            //{
+            //    post.Tags.Remove(tag);
+            //}
+            //_postRepository.Add(post);
             _postRepository.Add(post);
             return Ok(new { post });
         }

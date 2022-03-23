@@ -3,22 +3,25 @@ using fakeLook_models.Models;
 using fakeLook_starter.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace fakeLook_starter.Repositories
 {
     public class TagRepository : ITagRepository
     {
-        DataContext _context;
+        readonly private DataContext _context;
 
         public TagRepository(DataContext context)
         {
             _context = context;
         }
 
-        public Task<Tag> Add(Tag item)
+        public async Task<Tag> Add(Tag item)
         {
-            throw new NotImplementedException();
+            var res = _context.Tags.Add(item);
+            await _context.SaveChangesAsync();
+            return res.Entity;
         }
 
         public Task<Tag> Delete(int id)
@@ -43,7 +46,7 @@ namespace fakeLook_starter.Repositories
 
         public ICollection<Tag> GetByPredicate(Func<Tag, bool> predicate)
         {
-            throw new NotImplementedException();
+            return _context.Tags.Where(predicate).ToList();
         }
 
         public Tag Post(Tag item)
