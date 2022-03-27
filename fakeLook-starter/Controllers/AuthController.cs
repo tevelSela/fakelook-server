@@ -73,5 +73,14 @@ namespace fakeLook_starter.Controllers
         {
             return _repo.GetAll().ToList();
         }
+
+        [Authorize]
+        [HttpPost]
+        [Route("GetUserById")]
+        [TypeFilter(typeof(GetUserActionFilter))]
+        public async Task<User> GetUserById([FromBody] int id)
+        {
+            return _repo.GetByPredicate(f => f.Id==id)?.FirstOrDefault();
+        }
     }
 }

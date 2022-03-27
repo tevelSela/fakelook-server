@@ -8,6 +8,7 @@ using fakeLook_models.Models;
 using auth_example.Filters;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;
+using System;
 
 namespace fakeLook_starter.Controllers
 {
@@ -37,10 +38,18 @@ namespace fakeLook_starter.Controllers
         public async Task<IEnumerable<Post>> GetPostsByFilter(QueryRequest filter)
         {
             var Listtags = filter.tags.ToList();
-            var entities = _postRepository.GetAll()
-                .Where(p => (p.Date >= filter.fromDate && p.Date <= filter.toDate));
-                if(Listtags.Count()>0)
-                entities =  entities.Where(p => p.Tags.Where(t=>Listtags.Any(ot=>ot.Equals(t.Content))).Count()!=0);
+            IEnumerable<Post> entities = Enumerable.Empty<Post>();
+            var tomorrow = DateTime.Today.AddDays(1);
+            if (filter.fromDate.Year != 1990 || filter.toDate.Day != tomorrow.Day)
+            {
+                entities = _postRepository.GetAll()
+                  .Where(p => (p.Date >= filter.fromDate && p.Date <= filter.toDate));
+            }
+            if (Listtags.Count() > 0)
+            {
+                entities = entities.Where(p => p.Tags.Where(t => Listtags.Any(ot => ot.Equals(t.Content))).Count() != 0);
+            }
+
             return entities;
         }
         // var entities= _postRepository.GetByPredicate(p => p.Date >= filter.fromDate && p.Date <= filter.toDate);
@@ -59,22 +68,6 @@ namespace fakeLook_starter.Controllers
         {
             var user = (User)Request.RouteValues["user"];
             post.UserId = user.Id;
-
-            //Tag [] tags = new Tag[post.Tags.Count()];
-            //int index = 0;
-            //foreach (Tag tag in post.Tags)
-            //{
-            //    var currTag=_tagRepository.GetByPredicate(t=>t.Content.Equals(tag.Content))?.FirstOrDefault();
-            //    if(currTag != null)
-            //    {
-            //        tags[index++]=currTag;
-            //    }
-            //}
-            //foreach(Tag tag in tags)
-            //{
-            //    post.Tags.Remove(tag);
-            //}
-            //_postRepository.Add(post);
             _postRepository.Add(post);
             return Ok(new { post });
         }
